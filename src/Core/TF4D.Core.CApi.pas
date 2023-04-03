@@ -17,11 +17,17 @@ unit TF4D.Core.CApi;
 interface
    uses Winapi.Windows;
 const
+{$ifdef GPU_TENSORFLOW}
+  TensorFlowDev = 'gpu';
+  TensorFlowVer = '2.10.0';
+  TensorFlowLib = 'tensorflow' + '-' + TensorFlowDev + '-win64-' + TensorFlowVer + '.dll';
+{$else}
   TensorFlowDev = 'cpu';
   TensorFlowVer = '2.11.0';
   TensorFlowLib = 'tensorflow' + '-' + TensorFlowDev + '-win64-' + TensorFlowVer + '.dll';
+{$endif}
 const
-  TF_TSRING_SIZE : Integer = 24;
+  TF_STRING_SIZE : Integer = 24;
 type
  // --------------------------------------------------------------------------
  // Basistypen

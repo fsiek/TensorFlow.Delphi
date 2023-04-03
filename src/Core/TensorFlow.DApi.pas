@@ -2977,7 +2977,7 @@ begin
             SetLength(Result,len);
             CopyMemory(@Result[0], PByte(data), len)
         end;
-        Inc(PByte(tstrings), TF_TSRING_SIZE);
+        Inc(PByte(tstrings), TF_STRING_SIZE);
     end;
 end;
 
@@ -3008,7 +3008,7 @@ begin
     dims     := shape.Dims;
     pDims    :=  PTF_int64_t(Pointer(@dims)^);
 
-    var pTensor := TF_AllocateTensor(TF_DataType.TF_STRING, pDims, shape.ndim, shape.size * TF_TSRING_SIZE);
+    var pTensor := TF_AllocateTensor(TF_DataType.TF_STRING, pDims, shape.ndim, shape.size * TF_STRING_SIZE);
     var tstr  : PTF_TString  := TF_TensorData(pTensor);
 
     for i := 0 to Length(srcArray) - 1 do
@@ -3017,7 +3017,7 @@ begin
 
           TF_StringCopy(tstr, @srcArray[i][0], Length(srcArray[i]));
 
-          Inc(pbyte(tstr), TF_TSRING_SIZE);
+          Inc(pbyte(tstr), TF_STRING_SIZE);
     end;
     Result := pTensor;
 end;
