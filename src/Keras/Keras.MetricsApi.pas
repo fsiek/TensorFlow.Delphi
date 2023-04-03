@@ -525,7 +525,10 @@ begin
     end;
 
     tf.group<ITensorOrOperation>(update_ops.ToArray);
-    Result := nil ;
+    Result := nil;
+
+    loop_vars.Free;
+    update_ops.Free;
 end;
 
 end.

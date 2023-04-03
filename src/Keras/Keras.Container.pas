@@ -650,6 +650,7 @@ begin
     l.Add( Tuple.Create(Ffalse_negatives, np.zeros(num_thresholds)) );
 
     TKerasApi.keras.backend.batch_set_value(l);
+    l.Free;
 end;
 
 function Recall.R_result: TFTensor;
@@ -668,6 +669,7 @@ begin
     d.Add('tp', Ftrue_positives);
     d.Add('fn', Ffalse_negatives);
     Result := metrics_utils.update_confusion_matrix_variables(d, y_true, y_pred, Fthresholds, Ftop_k, Fclass_id, sample_weight, False, nil, Fthresholds_distributed_evenly);
+    d.Free;
 end;
 
 { Precision }
@@ -692,6 +694,7 @@ begin
     l.Add( Tuple.Create(Ffalse_positives, np.zeros(num_thresholds)) );
 
     TKerasApi.keras.backend.batch_set_value(l);
+    l.Free;
 end;
 
 function Precision.R_result: TFTensor;
@@ -710,6 +713,7 @@ begin
     d.Add('tp', Ftrue_positives);
     d.Add('fp', Ffalse_positives);
     Result := metrics_utils.update_confusion_matrix_variables(d, y_true, y_pred, Fthresholds, Ftop_k, Fclass_id, sample_weight, False, nil, Fthresholds_distributed_evenly);
+    d.Free;
 end;
 
 { FBetaScore }

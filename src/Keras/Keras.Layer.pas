@@ -1689,6 +1689,7 @@ begin
     Res     := Res.Distinct;
 
     Result := TList<IVariableV1>.Create(Res.ToArray);
+    children_weights.Free;
 end;
 
 function Layer.GetNotTrainW: TList<IVariableV1>;
@@ -1703,6 +1704,7 @@ begin
       Res     := Res.Distinct;
 
       Result := TList<IVariableV1>.Create(Res.ToArray);
+      children_weights.Free;
     end else
     begin
       var children_weights := _gather_children_variables(False,True);
@@ -1712,12 +1714,17 @@ begin
       Res     := Res.Distinct;
 
       Result := TList<IVariableV1>.Create(Res.ToArray);
+      children_weights.Free;
     end;
 end;
 
 function Layer.GetWeights: TList<IVariableV1>;
 begin
-    Result := TList<IVariableV1>.Create( TrainableWeights.ToArray + NonTrainableWeights.ToArray) ;
+    var LTrainableWeights := TrainableWeights;
+    var LNonTrainableWeights := NonTrainableWeights;
+    Result := TList<IVariableV1>.Create( LTrainableWeights.ToArray + LNonTrainableWeights.ToArray);
+    LTrainableWeights.Free;
+    LNonTrainableWeights.Free;
 end;
 
 procedure Layer.SetWeights(value: TList<IVariableV1>);
@@ -1961,6 +1968,8 @@ begin
         if recursive then
            TUtils.extendleft<Ilayer>(deque, layer_or_container.Layers);
     end;
+    seen_object_ids.Free;
+    deque.Free;
 end;
 
 function Layer._gather_children_variables(include_trainable, include_non_trainable: Boolean): TList<IVariableV1>;
@@ -5580,13 +5589,15 @@ end;
 
 procedure Metric.reset_states;
 begin
-    for var v in weights do
+    var LWeights := weights;
+    for var v in LWeights do
     begin
         if      v is RefVariable          then  (v as RefVariable).assign(Integer(0))
         else if v is BaseResourceVariable then  (v as BaseResourceVariable).assign(Integer(0))
         else
            raise Exception.Create('Metric.reset_states Error!');
     end;
+    LWeights.Free;
 end;
 
 function Metric.R_result: TFTensor;
